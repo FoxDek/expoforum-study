@@ -1,0 +1,1093 @@
+@font-face {
+  font-family: Circe;
+  src: url('../fonts/Circe-Regular.ttf') format("ttf"),
+      url('../fonts/Circe-Regular.woff') format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: Circe;
+  src: url('../fonts/Circe-Thin.ttf') format("ttf"),
+      url('../fonts/Circe-Thin.woff') format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: Circe;
+  src: url('../fonts/Circe-ExtraLight.ttf') format("ttf"),
+      url('../fonts/Circe-ExtraLight.woff') format("woff");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: Circe;
+  src: url('../fonts/Circe-Light.ttf') format("ttf"),
+      url('../fonts/Circe-Light.woff') format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: Circe;
+  src: url('../fonts/Circe-Bold.ttf') format("ttf"),
+      url('../fonts/Circe-Bold.woff') format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: Circe;
+  src: url('../fonts/Circe-ExtraBold.ttf') format("ttf"),
+      url('../fonts/Circe-ExtraBold.woff') format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+
+
+
+/**
+  Нормализация блочной модели
+*/
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+/**
+  Убираем внутренние отступы слева тегам списков,
+  у которых есть атрибут class
+*/
+:where(ul, ol):where([class]) {
+  padding-left: 0;
+}
+
+/**
+  Убираем внешние отступы body и двум другим тегам,
+  у которых есть атрибут class
+*/
+body,
+:where(blockquote, figure):where([class]) {
+  margin: 0;
+}
+
+/**
+  Убираем внешние отступы вертикали нужным тегам,
+  у которых есть атрибут class
+*/
+:where(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol,
+  dl
+):where([class]) {
+  margin-block: 0;
+}
+
+:where(dd[class]) {
+  margin-left: 0;
+}
+
+:where(fieldset[class]) {
+  margin-left: 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+  Убираем стандартный маркер маркированному списку,
+  у которого есть атрибут class
+*/
+:where(ul[class]) {
+  list-style: none;
+}
+
+:where(address[class]) {
+  font-style: normal;
+}
+
+/**
+  Обнуляем вертикальные внешние отступы параграфа,
+  объявляем локальную переменную для внешнего отступа вниз,
+  чтобы избежать взаимодействие с более сложным селектором
+*/
+p {
+  --paragraphMarginBottom: 24px;
+
+  margin-block: 0;
+}
+
+/**
+  Внешний отступ вниз для параграфа без атрибута class,
+  который расположен не последним среди своих соседних элементов
+*/
+p:where(:not([class]):not(:last-child)) {
+  margin-bottom: var(--paragraphMarginBottom);
+}
+
+
+/**
+  Упрощаем работу с изображениями и видео
+*/
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/**
+  Наследуем свойства шрифт для полей ввода
+*/
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+html {
+  /**
+    Пригодится в большинстве ситуаций
+    (когда, например, нужно будет "прижать" футер к низу сайта)
+  */
+  height: 100%;
+  /**
+    Убираем скачок интерфейса по горизонтали
+    при появлении / исчезновении скроллбара
+  */
+  scrollbar-gutter: stable;
+}
+
+/**
+  Плавный скролл
+*/
+html,
+:has(:target) {
+  scroll-behavior: smooth;
+}
+
+body {
+  /**
+    Пригодится в большинстве ситуаций
+    (когда, например, нужно будет "прижать" футер к низу сайта)
+  */
+  min-height: 100%;
+  /**
+    Унифицированный интерлиньяж
+  */
+  line-height: 1.5;
+}
+
+/**
+  Нормализация высоты элемента ссылки при его инспектировании в DevTools
+*/
+a:where([class]) {
+  display: inline-flex;
+}
+
+/**
+  Курсор-рука при наведении на элемент
+*/
+button,
+label {
+  cursor: pointer;
+}
+
+/**
+  Приводим к единому цвету svg-элементы
+*/
+[fill] { fill: currentColor }
+[stroke] { stroke: currentColor }
+
+/**
+  Чиним баг задержки смены цвета при взаимодействии с svg-элементами
+*/
+svg * {
+  transition-property: fill, stroke;
+}
+
+/**
+  Удаляем все анимации и переходы для людей,
+  которые предпочитают их не использовать
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+
+
+
+
+$primary-color: #30BCC9;
+$second-color: #F6404F;
+$text-color-light: #ffffff;
+$text-color-dark: #2E373B;
+$text-color-additional: #687F8B;
+$text-color-footer: #E0E0E0;
+$link-color-hover: #FFE000;
+
+
+
+
+
+
+
+
+
+
+
+body {
+  font-family: Circe, sans-serif;
+  font-size: 1rem;
+}
+
+.main {
+  background-color: rgb(240, 248, 248);
+}
+
+a {
+  text-decoration: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.header {
+  position: absolute;
+
+  background-color: transparent;
+  height: auto;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid $text-color-light;
+
+  &.open .menu {
+    transform: translateX(100%);
+  }
+
+  &.open &__burger-button span:nth-child(1) {
+    transform: translateY(0) rotate(45deg);
+  }
+
+  &.open &__burger-button span:nth-child(2) {
+    opacity: 0;
+  }
+
+  &.open &__burger-button span:nth-child(3) {
+    transform: translateY(0) rotate(-45deg);
+  }
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  &__burger-button {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 40px;
+    height: 30px;
+    border: none;
+    background-color: transparent;
+    z-index: 2;
+
+    @media (min-width: 1024px) {
+      display: none;
+    }
+  }
+
+  &__burger-button span {
+    position: absolute;
+    left: 5px;
+    width: 30px;
+    height: 3px;
+    background-color: $text-color-light;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+
+  &__burger-button span:nth-child(1) {
+    transform: translateY(-8px);
+  }
+
+  &__burger-button span:nth-child(3) {
+    transform: translateY(8px);
+  }
+}
+
+
+
+.logo {
+  position: relative;
+  height: 20px;
+  width: auto;
+  z-index: 3;
+
+  &__img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.menu {
+  width: 60%;
+  height: 100vh;
+  position: absolute;
+  left: -60%;
+  top: 0;
+  padding: 100px 20px 20px 20px;
+  background-color: $text-color-dark;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  @media (min-width: 1024px) {
+    background-color: transparent;
+    width: auto;
+    flex-direction: row;
+    position: inherit;
+    padding: 0px;
+    height: auto;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    color: $text-color-light;
+    padding-bottom: 30px;
+
+    & .menu__button {
+      display: flex;
+      gap: 10px;
+    }
+
+    & span {
+      font-size: 1rem;
+      color: $text-color-light;
+      transition: color 0.5s ease-in-out;
+    }
+
+    & svg path {
+      fill: $text-color-light;
+      transition: fill 0.5s ease-in-out;
+    }
+
+    & a:hover span {
+      color: $link-color-hover;
+    }
+
+    & a:hover svg path {
+      fill: $link-color-hover;
+    }
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      order: 3;
+      gap: 40px;
+      padding-bottom: 0;
+
+      & a:first-child span:first-of-type {
+        display: none;
+      }
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    border-top: 1px solid $text-color-light;
+
+    @media (min-width: 1024px) {
+      display: flex;
+      flex-direction: row;
+      padding-bottom: 0;
+      padding-top: 0;
+      padding-right: 7vw;
+      border-top: 0;
+    }
+  }
+
+  &__link {
+    color: $text-color-light;
+    font-size: 1rem;
+    display: block;
+    transition: color 0.5s ease-in-out;
+
+    &:hover {
+      color: $link-color-hover;
+      text-decoration: underline;
+      text-underline-offset: 7px;
+    }
+  }
+}
+
+.hero {
+  width: 100%;
+  height: auto;
+  position: relative;
+  background-image: url('../images/city-background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position:left;
+  color: $text-color-light;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 2;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 3;
+    padding-top: 100px;
+    padding-bottom: 50px;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      padding-top: 280px;
+      gap: 120px;
+    }
+  }
+
+  &-about {
+    display: block;
+    padding: 30px 0;
+
+    &__title {
+      font-family: Roboto, sans-serif;
+      font-size: 2.5rem;
+      padding-bottom: 20px;
+
+      @media (min-width: 576px) {
+        font-size: 4rem;
+      }
+    }
+
+    &__description {
+      font-size: 1rem;
+      padding-bottom: 30px;
+
+      @media (min-width: 576px) {
+        font-size: 1.5rem;
+      }
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: $text-color-light;
+
+      @media (min-width: 576px) {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      // align-self: flex-start;
+      padding-top: 0;
+      padding-bottom: 80px;
+    }
+  }
+
+  &-linksgrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 20px;
+
+    @media (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      align-self: flex-end;
+    }
+  }
+
+  &-linkblock {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: $second-color;
+    height: auto;
+    padding: 15px;
+    border-radius: 20px;
+    
+    &:hover &__link span {
+      transition: color 0.5s ease-in-out;
+      color: $link-color-hover;
+    }
+
+    &:hover &__link svg path {
+      transition: fill 0.5s ease-in-out;
+      fill: $link-color-hover;
+    }
+
+    &.red {
+      background-color: $primary-color
+    }
+
+    &__title {
+      color: $text-color-light;
+      font-family: Roboto, sans-serif;
+      line-height: 130%;
+      font-weight: 300;
+      font-size: 1.1rem;
+      padding-bottom: 15px;
+      
+      @media (min-width: 1024px) {
+        font-weight: 400;
+      }
+    }
+
+    &__link {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: $text-color-light;
+    }
+  }
+}
+
+
+.info {
+  padding-top: 50px;
+  padding-bottom: 30px;
+
+  &__content {
+    width: 300px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+
+    @media (min-width: 576px) {
+      width: auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+  }
+
+  &__block {
+    
+    &:not(:last-child) {
+      padding-bottom: 20px; // Установите нужное значение для padding-bottom
+    }
+
+    &.open .info__list {
+      display: flex;
+      flex-direction: column;
+      gap:15px;
+      padding: 10px 5px;
+      max-height: 200px;
+      transition: all 0.5s;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    &.open .info__topic svg {
+      rotate: 360deg;
+    }
+  }
+
+  &__topic {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    & span {
+      font-family: Roboto, serif;
+      font-size: 1.8rem;
+      color: $text-color-dark;
+    }
+
+    & svg {
+      width: 20px;
+      height: 20px;
+      rotate: 180deg;
+
+      @media (min-width: 576px) {
+        display: none;
+      }
+
+      & path {
+        fill: $text-color-dark;
+      }
+    }
+  }
+
+  &__list {
+    overflow-y: hidden;
+    max-height: 0;
+    transition: all 0.25s; // скорость скрытия
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &__link {
+    color: $text-color-dark;
+    transition: color 0.3s ease-in-out;
+    text-underline-offset: 7px;
+
+    &:hover {
+      text-decoration: underline;
+      color: $link-color-hover;
+    }
+  }
+
+}
+
+
+.events {
+  padding-bottom: 50px;
+
+  &__top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 25px 5px;
+
+    @media (min-width: 576px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__title {
+    font-family: Roboto, serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    & span {
+      font-family: Roboto, serif;
+      font-weight: 400;
+      color: $text-color-dark;
+      text-decoration: underline;
+      text-underline-offset: 7px;
+      transition: color 0.3s ease-in-out;
+    }
+
+    & svg path {
+      fill: $text-color-dark;
+      transition: fill 0.3s ease-in-out;
+    }
+
+    &:hover span {
+      color: $link-color-hover;
+      text-decoration: none;
+    }
+
+    &:hover svg path {
+      fill: $link-color-hover;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+
+    @media (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    & .event {
+      display: flex;
+      flex-direction: column;
+      background-color: $primary-color;
+      padding: 15px;
+      border-radius: 30px;
+
+      &__description {
+        padding-top: 20px;
+        padding-bottom: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 10px;
+        height: 100%;
+      }
+
+      &__image {
+        width: 100%;
+        height: auto;
+        border-radius: 30px;
+      }
+
+      &__title {
+        font-family: Roboto, serif;
+        font-size: 1.2rem;
+        color: $second-color;
+        transition: color 0.3s ease-in-out;
+      }
+
+      &__text {
+        color: $text-color-dark;
+      }
+
+      &__data {
+        color: $text-color-additional;
+      }
+    }
+
+    & .event:hover .event__title {
+      color: $link-color-hover;
+    }
+  }
+}
+
+
+.news {
+  height: auto;
+  padding: 50px 0;
+
+  &__content {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      gap: 50px;
+    }
+  }
+
+  &__covers {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: space-between;
+
+    & img {
+      width: 100%;
+      height: auto;
+      border-radius: 30px;
+      outline: 2px solid transparent;
+    }
+
+    & img:hover {
+      outline: 2px solid $link-color-hover;
+      outline-offset: 2px;
+    }
+
+    @media (min-width: 768px) {
+      max-width: 50%;
+    }
+  }
+
+  &__notes {
+    display: flex;
+    flex-direction: column;
+    min-width: 30%;
+
+    & .notes__top {
+      display: flex;
+      flex-direction: column;
+
+      @media (min-width: 576px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+    }
+
+    & .notes__title {
+      color: $text-color-dark;
+      font-family: Roboto, serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+
+    & .notes__link {
+      color: $text-color-dark;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      & span {
+        text-decoration: underline;
+        text-underline-offset: 7px;
+      }
+
+      &:hover span {
+        color: $link-color-hover;
+        text-decoration: none;
+        transition: color 0.3s ;
+      }
+  
+      &:hover svg path {
+        fill: $link-color-hover;
+      }
+    }
+
+    
+
+    & .notes__items {
+      height: 100%;
+      gap: 35px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: 20px;
+
+      & .note {
+        display: flex;
+        gap: 30px;
+        
+        &__img {
+          display: none;
+
+          @media (min-width: 576px) {
+            display: block;
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            border-radius: 20px;
+          }
+
+          @media (min-width: 768px) {
+            display: none;
+          }
+
+          @media (min-width: 1024px) {
+            display: block;
+          }
+        }
+
+        &__description {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 15px;
+        }
+
+        &__data {
+          color: $text-color-additional;
+        }
+
+        &__text {
+          color: $text-color-dark;
+          font-family: Roboto, serif;
+          font-size: 1.2rem;
+          transition: color 0.3s ease-in-out;
+        }
+
+        &:hover .note__text {
+          color: $link-color-hover;
+          text-decoration: underline;
+          text-underline-offset: 7px;
+        }
+      }
+    }
+  }
+
+}
+
+
+.footer {
+  background-color: $primary-color;
+  padding: 50px 0;
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    
+
+    @media (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  & span {
+    font-family: Roboto, serif;
+    font-size: 1.5rem;
+    color: $text-color-light;
+  }
+
+  & .info__block {
+    padding-bottom: 20px;
+
+    & svg path {
+      fill: $text-color-light;
+    }
+  }
+
+  & .info__link {
+    color: $text-color-footer;
+
+    &:hover {
+      color: $link-color-hover;
+    }
+  }
+
+  &__download {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px 0;
+
+    & span {
+      padding-bottom: 5px;
+    }
+
+    & img {
+      width: 200px;
+      height: auto;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      transition: border-color 0.3s ease-in-out;
+
+      &:hover {
+        border: 2px solid $link-color-hover;
+      }
+    }
+
+    @media (min-width: 576px) {
+      padding-top: 0;
+    }
+  }
+
+  &__socialmedia {
+    padding-bottom: 20px;
+    
+    & span {
+      padding-bottom: 5px;
+    }
+
+    & div {
+      display: flex;
+      padding: 20px 0;
+      gap: 40px;
+    }
+
+    & svg {
+      width: auto;
+      height: 25px;
+
+      & path {
+        fill: $text-color-footer;
+        transition: fill 0.3s ease-in-out;
+      }
+
+      &:hover path {
+        fill: $link-color-hover;
+      }
+    }
+  }
+
+  &__subscribe {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    & p {
+      color: $text-color-footer;
+      margin: 0;
+    }
+
+    & .footer__input {
+      display: flex;
+      align-items: center;
+
+      & input {
+        padding: 10px; /* Внутренние отступы */
+        border: none; /* Убирает границу */
+        outline: none;
+        outline-offset: -0.15rem;
+        height: 44px;
+
+        &::placeholder {
+          color: #9C9C9C;
+        }
+
+        &:focus {
+          outline: 2px solid $link-color-hover;
+        }
+      }
+
+      & button {
+        height: 44px;
+        width: 44px;
+        background-color: $second-color; /* Цвет фона кнопки */
+        border: none; /* Убирает границу */
+        cursor: pointer; /* Курсор при наведении */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem; /* Внутренние отступы */
+
+        &:hover {
+          outline: 2px solid $link-color-hover;
+          outline-offset: -0.15rem;
+        }
+
+        & svg {
+          width: 1.3rem;
+          height: 1.3rem;
+
+          & path {
+            fill: $text-color-light;
+          }
+        }
+      }
+    }
+  }
+}
